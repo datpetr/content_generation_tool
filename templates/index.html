@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Generation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Content Generation Tool</h1>
+        <form id="generate-form">
+            <label for="topic">Enter a brief description or topic:</label>
+            <textarea id="topic" name="topic" rows="4" cols="50" required></textarea>
+            <button type="submit">Generate</button>
+        </form>
+        <div id="output">
+            <h2>Generated Article</h2>
+            <p id="article"></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('generate-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const topic = document.getElementById('topic').value;
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ topic })
+            });
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+            } else {
+                document.getElementById('article').innerText = data.article;
+            }
+        });
+    </script>
+</body>
+</html>
+
